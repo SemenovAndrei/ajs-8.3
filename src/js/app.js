@@ -1,12 +1,13 @@
-/* eslint-disable guard-for-in */
-/* eslint-disable no-restricted-syntax */
-import ErrorRepository from './errorrepsitory';
-import errorsList from './errorslist';
 
-const repository = new ErrorRepository(Object.entries(errorsList));
+import Settings from './settings';
 
-console.log(repository);
+const settings = new Settings();
 
-console.log(repository.translate(1));
-console.log(repository.translate());
-console.log(repository.translate(111));
+console.log(settings);
+console.log(settings.defaultSettings);
+
+settings.userSettings
+  .set('theme', 'light')
+  .set('music', 'off')
+  .set('difficulty', 'hard');
+console.log(settings.settings);
