@@ -1,13 +1,12 @@
+import rules from './settingsrules';
 
 import Settings from './settings';
 
-const settings = new Settings();
-
-console.log(settings);
-console.log(settings.defaultSettings);
+const settings = new Settings(rules);
 
 settings.userSettings
   .set('theme', 'light')
-  .set('music', 'off')
-  .set('difficulty', 'hard');
+  .set('music', '1')
+  .set('la-la-la', 'ololo');
 console.log(settings.settings);
+console.log(settings.settingsWithoutFilter);

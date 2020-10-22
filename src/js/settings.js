@@ -1,18 +1,22 @@
-import rules from './settingsrules';
 
 /**
  * Хранилище настроек
  */
 class Settings {
   /**
-   * Создает {Map} userSettings - настройки пользователя
+   * @create
+   * {Map} userSettings - настройки пользователя
    *
-   * Создает {Map} defaultSettings - настройки по умолчанию
+   * {Map} defaultSettings - настройки по умолчанию
    *
+   * {Object} rules - разрешенные ключи и значения
+   *
+   * Заполняет defaultSettings настройками по умолчанию
    */
-  constructor() {
+  constructor(rules) {
     this.userSettings = new Map();
     this.defaultSettings = new Map();
+    this.rules = rules;
 
     Object.keys(rules).forEach((k) => {
       this.defaultSettings.set(k, rules[k][0]);
@@ -20,18 +24,36 @@ class Settings {
   }
 
   /**
-   * Возвращает результат слияния userSettings и defaultSettings
+   * Проверяет ключи и значения userSettings
+   * на соответствие правилам rules
+   *
+   * @returns - {Map} - разрешенные настройки
+   * установленные в userSettings
    */
-  get settings() {
-    const result = this.defaultSettings;
+  filterUserSettings() {
+    const result = new Map();
     this.userSettings.forEach((v, k) => {
-      if (result.has(k)) {
-        if (rules[k].includes(v)) {
-          result.set(k, v);
-        }
+      if (this.defaultSettings.has(k) && this.rules[k].includes(v)) {
+        result.set(k, v);
       }
     });
     return result;
+  }
+
+  /**
+   * @returns - {Map} - результат слияния defaultSettings
+   * и разрешенных настроек из userSettings
+   */
+  get settings() {
+    return new Map([...this.defaultSettings, ...this.filterUserSettings()]);
+  }
+
+  /**
+   * @returns - {Map} - результат слияния defaultSettings и
+   * "нефильтрованного" userSettings
+   */
+  get settingsWithoutFilter() {
+    return new Map([...this.defaultSettings, ...this.userSettings]);
   }
 }
 
